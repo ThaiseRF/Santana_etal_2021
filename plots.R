@@ -15,7 +15,7 @@ gc()
 
 # load packages --------
 if(!require(pacman)) install.packages("pacman")
-pacman::p_load(readxl, ggplot2, tidyverse, tidypaleo, patchwork)
+pacman::p_load(readxl, ggplot2, tidyverse, tidypaleo, patchwork, plyr)
 
 
 # DATA -----------------------------------------
@@ -45,7 +45,7 @@ ggplot() +
 
 ### transpose abiotic data for plots
 
-abi_trans <- tidyr::pivot_longer(abi, cols = `Detrital mud  (%) `:`d18O Uvig`, 
+abi_trans <- pivot_longer(abi, cols = `Detrital mud  (%) `:`d18O Uvig`, 
                                  names_to = "param", values_to = "value")
 
 ### change parameters name to plot labels
@@ -61,14 +61,14 @@ abi_trans$param <- recode(abi_trans$param,
 #sis 188
 sis188_abund <- read_excel("dados.xlsx", sheet = "sis188_abund") #read data
 
-sis188_abund <- tidyr::pivot_longer(sis188_abund, cols = Tangulosa:Udirrupta,
+sis188_abund <- pivot_longer(sis188_abund, cols = Tangulosa:Udirrupta,
                                     names_to = "spp", values_to = "abund")
 
 #sis249
 sis249_abund <- read_excel("dados.xlsx", sheet = "sis249_abund") #read data
 
 
-sis249_abund <- tidyr::pivot_longer(sis249_abund, cols = Tangulosa:Uhispidocostata, 
+sis249_abund <- pivot_longer(sis249_abund, cols = Tangulosa:Uhispidocostata, 
                                     names_to = "spp", values_to = "abund")
 
 
@@ -109,7 +109,6 @@ biomassa$spp <- recode(biomassa$spp, "Trifarina angulosa" = "T. angulosa",
 
 
 #Average biomass by species - sis 188
-library(plyr)
 mean_biomassa <-ddply(biomassa,c("core","spp","age"),
                       summarise,
                       mean=mean(biomass)) #average 
